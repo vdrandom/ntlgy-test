@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+typeset -a inactive services
+services=(
+    nginx.service
+    php-fpm.service
+)
+
+for service in "${services[@]}"; do
+    /usr/bin/systemctl is-active -q "$service" || inactive+=("$service")
+done
+
+if ((${#inactive[@]})); then
+    printf "inactive services: %s\n" "${inactive[@]}"
+    exit 1
+else
+    exit 0
+fi
